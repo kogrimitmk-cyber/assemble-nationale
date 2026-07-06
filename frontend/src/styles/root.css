@@ -1,0 +1,5 @@
+/* Colle le footer en bas et laisse le contenu occuper la hauteur. */
+#root { display: flex; flex-direction: column; min-height: 100vh; }
+#root > main, #root > .vue { flex: 1 0 auto; }
+/* L'espace député occupe tout l'écran (layout dédié). */
+#root:has(.dashboard-layout) { display: block; }

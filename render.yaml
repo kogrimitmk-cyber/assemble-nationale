@@ -1,0 +1,36 @@
+# Blueprint Render — AN Connect Tchad (backend Django + PostgreSQL)
+# Deploiement : Render > New > Blueprint > pointer ce depot.
+# Le frontend React est deploye separement sur Vercel (voir frontend/vercel.json).
+
+databases:
+  - name: anconnect-db
+    databaseName: anconnect
+    plan: free            # gratuit 90 jours ; passer a un plan payant ensuite
+
+services:
+  - type: web
+    name: anconnect-api
+    runtime: python
+    plan: free            # le service gratuit se met en veille apres inactivite
+    rootDir: backend
+    buildCommand: "bash build.sh"
+    startCommand: "gunicorn anconnect.wsgi:application"
+    healthCheckPath: /api/sante/
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: SECRET_KEY
+        generateValue: true          # Render genere une cle forte
+      - key: DEBUG
+        value: "false"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: anconnect-db
+          property: connectionString
+      - key: ADMIN_INIT_PASSWORD
+        generateValue: true          # mot de passe initial des comptes de demo
+      # A renseigner APRES le premier deploiement Vercel (URL du frontend) :
+      - key: CORS_ORIGINS
+        sync: false                  # ex. https://an-connect.vercel.app
+      - key: CSRF_TRUSTED_ORIGINS
+        sync: false                  # ex. https://an-connect.vercel.app

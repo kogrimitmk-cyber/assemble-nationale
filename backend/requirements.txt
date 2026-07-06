@@ -1,0 +1,17 @@
+# ═══════════════════════════════════════════════════════════════
+# AN Connect Tchad — Backend Django REST
+# Installer :  pip install -r requirements.txt
+# ═══════════════════════════════════════════════════════════════
+Django>=6.0,<6.1
+djangorestframework>=3.17
+djangorestframework-simplejwt>=5.5
+django-cors-headers>=4.9
+python-dotenv>=1.2
+dj-database-url>=3.1
+pyotp>=2.10
+Pillow>=11.0        # champs image (photos deputes, actualites)
+
+# ── Production ───────────────────────────────────────────────
+gunicorn>=23.0          # serveur WSGI de production
+whitenoise>=6.8         # service des fichiers statiques (admin Django)
+psycopg[binary]>=3.2    # pilote PostgreSQL (Render). En dev local : SQLite.

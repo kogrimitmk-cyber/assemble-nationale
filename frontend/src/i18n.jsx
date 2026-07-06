@@ -1,0 +1,281 @@
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+
+// Dictionnaires FR / AR. Le contenu éditorial (titres de lois, séances…)
+// reste dans sa langue de saisie ; seule l'interface est traduite.
+export const I18N = {
+  fr: {
+    'marque.nom': 'Assemblée Nationale',
+    'marque.pays': 'République du Tchad',
+    'marque.portail': 'AN Connect — Portail parlementaire officiel',
+    'marque.devise': 'Unité · Travail · Progrès',
+    'marque.palais': 'Palais de la Démocratie, N’Djamena',
+
+    'nav.accueil': 'Accueil', 'nav.agenda': 'Agenda', 'nav.lois': 'Lois',
+    'nav.scrutins': 'Votes', 'nav.deputes': 'Députés', 'nav.documents': 'Documents',
+    'nav.citoyen': 'Espace citoyen', 'nav.connexion': 'Connexion',
+    'nav.espace': 'Espace député', 'nav.deconnexion': 'Se déconnecter',
+    'nav.langue': 'العربية', 'nav.menu': 'Ouvrir le menu',
+
+    'accueil.desc': 'Chambre basse du Parlement, l’Assemblée Nationale vote la loi, contrôle l’action du Gouvernement et porte la voix de chaque province. Suivez ses travaux en toute transparence.',
+    'stat.deputes': 'Députés en exercice', 'stat.textes': 'Textes en cours d’examen',
+    'stat.seances': 'Séances tenues', 'stat.groupes': 'Groupes parlementaires',
+    'accueil.prochaines': 'Prochaines séances', 'accueil.derniers_textes': 'Derniers textes déposés',
+    'accueil.actualites': 'Actualités officielles', 'accueil.tout_agenda': 'Tout l’agenda',
+    'accueil.tous_textes': 'Tous les textes', 'accueil.hero_sous': 'AN Connect Tchad — Votre portail parlementaire',
+
+    'agenda.titre': 'Agenda des séances',
+    'agenda.sous_titre': 'Séances plénières, réunions de commission et événements officiels de l’Assemblée Nationale.',
+    'agenda.vue_liste': 'Liste', 'agenda.vue_calendrier': 'Calendrier',
+    'agenda.filtre_type': 'Tous les types', 'agenda.filtre_statut': 'Tous les statuts',
+    'agenda.ordre_du_jour': 'Ordre du jour', 'agenda.a_venir': 'Séances à venir',
+    'agenda.type_seance': 'Type de séance', 'agenda.statut': 'Statut',
+    'agenda.f_toutes': 'Toutes', 'agenda.f_avenir': 'À venir', 'agenda.f_terminees': 'Terminées',
+    'agenda.aujourdhui': 'Aujourd’hui', 'agenda.vue': 'Vue',
+
+    'seance.seance_pleniere': 'Séance plénière', 'seance.commission': 'Commission',
+    'seance.reunion': 'Réunion', 'seance.ceremonie': 'Cérémonie', 'seance.autre': 'Autre',
+    'seance.prevue': 'Prévue', 'seance.en_cours': 'En cours', 'seance.terminee': 'Terminée', 'seance.annulee': 'Annulée',
+
+    'lois.titre': 'Projets et propositions de loi',
+    'lois.sous_titre': 'Suivez le parcours de chaque texte, du dépôt à la promulgation.',
+    'lois.rechercher': 'Rechercher par titre ou référence…', 'lois.tous': 'Tous',
+    'lois.commission_en_charge': 'Commission en charge', 'lois.rapporteur': 'Rapporteur',
+    'lois.depose_par': 'Déposé par', 'lois.date_depot': 'Déposé le',
+    'lois.type_projet': 'Projet de loi', 'lois.type_proposition': 'Proposition de loi',
+    'lois.consulter': 'Consulter le texte', 'lois.retour': 'Retour aux textes',
+    'loi.etapes': 'Fil des étapes franchies', 'loi.articles': 'Articles du texte',
+    'loi.documents': 'Documents liés', 'loi.aucun_article': 'Les articles de ce texte n’ont pas encore été publiés.',
+
+    'statut.depose': 'Déposé', 'statut.en_commission': 'En commission', 'statut.en_debat': 'En débat',
+    'statut.au_vote': 'Au vote', 'statut.adopte': 'Adopté', 'statut.promulgue': 'Promulgué',
+    'statut.rejete': 'Rejeté', 'statut.retire': 'Retiré',
+    'priorite.normale': 'Normale', 'priorite.prioritaire': 'Prioritaire', 'priorite.urgence_nationale': 'Urgence nationale',
+    'etape.depot': 'Dépôt', 'etape.commission': 'Commission', 'etape.pleniere': 'Plénière',
+    'etape.vote': 'Vote', 'etape.promulgation': 'Promulgation',
+
+    'scrutins.titre': 'Historique des votes',
+    'scrutins.sous_titre': 'Résultats agrégés des scrutins publics en séance plénière.',
+    'scrutins.dev_titre': 'Module en cours de développement',
+    'scrutins.dev_texte': 'Le vote électronique en hémicycle est en phase de déploiement. Les résultats des scrutins seront publiés ici dès la mise en service.',
+    'scrutins.pour': 'Pour', 'scrutins.contre': 'Contre', 'scrutins.abstention': 'Abstention',
+    'scrutins.votants': 'Votants', 'scrutins.adopte': 'Adopté', 'scrutins.rejete': 'Rejeté',
+    'scrutins.archives_titre': 'Archives des votes',
+    'scrutins.archives_texte': 'Les scrutins antérieurs seront progressivement ajoutés à cette base de données au fur et à mesure de la numérisation.',
+
+    'deputes.titre': 'Les députés de la Nation',
+    'deputes.sous_titre': 'Retrouvez les élus par nom, groupe parlementaire, province ou commission.',
+    'deputes.rechercher': 'Rechercher un député…', 'deputes.toutes_provinces': 'Toutes les provinces',
+    'deputes.tous_groupes': 'Tous les groupes', 'deputes.toutes_commissions': 'Toutes les commissions',
+    'deputes.commissions': 'Commissions', 'deputes.taux_presence': 'Taux de présence',
+    'deputes.retour': 'Retour au trombinoscope', 'deputes.circonscription': 'Circonscription',
+    'deputes.groupe': 'Groupe parlementaire', 'deputes.ecrire': 'Écrire à ce député', 'deputes.resultat': 'élu(s) trouvé(s)',
+
+    'documents.titre': 'Bibliothèque de documents',
+    'documents.sous_titre': 'Lois promulguées, rapports, procès-verbaux et règlements officiels.',
+    'documents.rechercher': 'Rechercher un document…', 'documents.toutes_categories': 'Toutes les catégories',
+    'documents.telecharger': 'Télécharger', 'documents.acces_public': 'Public',
+    'documents.acces_interne': 'Interne', 'documents.acces_confidentiel': 'Confidentiel',
+    'documents.note_connexion': 'Certains documents internes ne sont visibles qu’après connexion.',
+    'doc.loi_adoptee': 'Loi adoptée', 'doc.rapport': 'Rapport', 'doc.proces_verbal': 'Procès-verbal',
+    'doc.reglement': 'Règlement', 'doc.ordre_du_jour': 'Ordre du jour', 'doc.autre': 'Autre',
+
+    'citoyen.titre': 'Espace citoyen',
+    'citoyen.sous_titre': 'Interpellez votre député, saisissez une commission, signez une pétition : votre voix compte.',
+    'citoyen.form_titre': 'Écrire à un député ou à une commission', 'citoyen.nom': 'Nom complet',
+    'citoyen.contact': 'Téléphone ou email', 'citoyen.province': 'Province',
+    'citoyen.choisir_province': 'Sélectionner votre province…', 'citoyen.destinataire': 'Destinataire',
+    'citoyen.dest_depute': 'Un député', 'citoyen.dest_commission': 'Une commission',
+    'citoyen.choisir_depute': 'Choisir un député…', 'citoyen.choisir_commission': 'Choisir une commission…',
+    'citoyen.sujet': 'Sujet', 'citoyen.message': 'Votre message',
+    'citoyen.message_ph': 'Décrivez votre préoccupation, question ou suggestion…',
+    'citoyen.envoyer': 'Envoyer le message', 'citoyen.envoye_titre': 'Message transmis',
+    'citoyen.envoye_texte': 'Votre message a bien été enregistré sous la référence',
+    'citoyen.petitions': 'Pétitions citoyennes', 'citoyen.signatures': 'signatures',
+    'citoyen.objectif': 'objectif', 'citoyen.signer': 'Signer cette pétition',
+    'citoyen.signee': 'Signature enregistrée', 'citoyen.petition_traitee': 'Traitée',
+    'citoyen.petition_cloturee': 'Clôturée', 'citoyen.nouveau_message': 'Envoyer un autre message',
+
+    'auth.titre': 'Espace sécurisé', 'auth.sous_titre': 'Réservé aux députés et au personnel de l’Assemblée Nationale.',
+    'auth.identifiant': 'Matricule ou email institutionnel', 'auth.identifiant_ph': 'Ex. DEP-014',
+    'auth.mdp': 'Mot de passe', 'auth.se_connecter': 'Se connecter',
+    'auth.otp_titre': 'Vérification en deux étapes',
+    'auth.otp_sous_titre': 'Saisissez le code à 6 chiffres généré par votre application d’authentification.',
+    'auth.otp_valider': 'Vérifier le code', 'auth.otp_retour': 'Revenir à la connexion',
+    'auth.note_securite': 'Connexion chiffrée — vos identifiants ne sont jamais partagés.',
+    'auth.public_lien': 'Retour au portail', 'auth.erreur': 'Identifiant ou mot de passe incorrect.',
+    'auth.otp_erreur': 'Code incorrect ou expiré. Réessayez.',
+
+    'bo.titre': 'Espace député', 'bo.bonjour': 'Bienvenue', 'bo.presence': 'Présence en séance',
+    'bo.seances_suivies': 'séances émargées', 'bo.mes_commissions': 'Mes commissions',
+    'bo.agenda_perso': 'Mon agenda', 'bo.documents_seance': 'Documents de séance',
+    'bo.role_rapporteur': 'Rapporteur', 'bo.role_membre': 'Membre', 'bo.role_president': 'Président(e)',
+    'bo.role_vice_president': 'Vice-président(e)', 'bo.scrutin_ouvert': 'Scrutin ouvert',
+    'bo.aucun_scrutin': 'Aucun scrutin ouvert actuellement',
+    'bo.aucun_scrutin_desc': 'Lorsqu’un vote sera convoqué en séance, il apparaîtra ici.',
+    'bo.voter': 'Confirmer mon vote', 'bo.vote_enregistre': 'Votre vote a été enregistré',
+    'bo.mdp_a_changer': 'Sécurité : votre mot de passe initial doit être changé.',
+    'bo.activer_2fa': 'Activer la double authentification (2FA)', 'bo.2fa_active': 'Double authentification active',
+    'bo.notifications': 'Notifications', 'bo.tableau': 'Tableau de bord', 'bo.doc_internes': 'Derniers documents internes',
+    'bo.vote_requis': 'Vote électronique requis',
+
+    'legal.mentions': 'Mentions légales', 'legal.confidentialite': 'Politique de confidentialité',
+
+    'commun.vide_titre': 'Aucune donnée disponible pour le moment',
+    'commun.vide_texte': 'Les informations seront publiées ici dès qu’elles seront disponibles.',
+    'commun.erreur_titre': 'Connexion impossible',
+    'commun.erreur_texte': 'Le serveur est momentanément injoignable. Vérifiez votre connexion puis réessayez.',
+    'commun.reessayer': 'Réessayer', 'commun.envoi': 'Envoi…',
+    'commun.demo': 'Plateforme de démonstration — les données affichées sont fictives.',
+    'commun.ko': 'Ko', 'commun.mo': 'Mo', 'commun.ref': 'Réf',
+    'a11y.contenu': 'Aller au contenu',
+    'footer.desc': "AN Connect Tchad est la plateforme numérique officielle pour suivre l'activité parlementaire et participer à la vie démocratique.",
+    'footer.institution': 'Institution', 'footer.legislation': 'Législation', 'footer.contact': 'Contact',
+    'footer.apropos': "À propos de l'Assemblée", 'footer.president': 'Le Président',
+    'footer.groupes': 'Groupes parlementaires', 'footer.commissions': 'Commissions',
+    'footer.copyright': '© 2026 Assemblée Nationale de la République du Tchad. Tous droits réservés.',
+  },
+
+  ar: {
+    'marque.nom': 'الجمعية الوطنية', 'marque.pays': 'جمهورية تشاد',
+    'marque.portail': 'AN Connect — البوابة البرلمانية الرسمية',
+    'marque.devise': 'الاتحاد · العمل · التقدم', 'marque.palais': 'قصر الديمقراطية، انجمينا',
+
+    'nav.accueil': 'الرئيسية', 'nav.agenda': 'جدول الجلسات', 'nav.lois': 'القوانين',
+    'nav.scrutins': 'التصويتات', 'nav.deputes': 'النواب', 'nav.documents': 'الوثائق',
+    'nav.citoyen': 'فضاء المواطن', 'nav.connexion': 'تسجيل الدخول',
+    'nav.espace': 'فضاء النائب', 'nav.deconnexion': 'تسجيل الخروج',
+    'nav.langue': 'Français', 'nav.menu': 'فتح القائمة',
+
+    'accueil.desc': 'بصفتها الغرفة الأولى للبرلمان، تُصوِّت الجمعية الوطنية على القوانين وتراقب عمل الحكومة وتحمل صوت كل إقليم. تابعوا أعمالها بكل شفافية.',
+    'stat.deputes': 'نائبًا في الخدمة', 'stat.textes': 'نصوص قيد الدراسة',
+    'stat.seances': 'جلسات منعقدة', 'stat.groupes': 'كتل برلمانية',
+    'accueil.prochaines': 'الجلسات القادمة', 'accueil.derniers_textes': 'آخر النصوص المودعة',
+    'accueil.actualites': 'الأخبار الرسمية', 'accueil.tout_agenda': 'كامل الجدول',
+    'accueil.tous_textes': 'جميع النصوص', 'accueil.hero_sous': 'AN Connect Tchad — بوابتكم البرلمانية',
+
+    'agenda.titre': 'جدول الجلسات',
+    'agenda.sous_titre': 'الجلسات العامة واجتماعات اللجان والفعاليات الرسمية للجمعية الوطنية.',
+    'agenda.vue_liste': 'قائمة', 'agenda.vue_calendrier': 'تقويم',
+    'agenda.filtre_type': 'كل الأنواع', 'agenda.filtre_statut': 'كل الحالات',
+    'agenda.ordre_du_jour': 'جدول الأعمال', 'agenda.a_venir': 'الجلسات القادمة',
+    'agenda.type_seance': 'نوع الجلسة', 'agenda.statut': 'الحالة',
+    'agenda.f_toutes': 'الكل', 'agenda.f_avenir': 'قادمة', 'agenda.f_terminees': 'منتهية',
+    'agenda.aujourdhui': 'اليوم', 'agenda.vue': 'عرض',
+
+    'seance.seance_pleniere': 'جلسة عامة', 'seance.commission': 'لجنة', 'seance.reunion': 'اجتماع',
+    'seance.ceremonie': 'مراسم', 'seance.autre': 'أخرى', 'seance.prevue': 'مقررة',
+    'seance.en_cours': 'جارية', 'seance.terminee': 'منتهية', 'seance.annulee': 'ملغاة',
+
+    'lois.titre': 'مشاريع ومقترحات القوانين', 'lois.sous_titre': 'تابعوا مسار كل نص، من الإيداع إلى الإصدار.',
+    'lois.rechercher': 'البحث بالعنوان أو المرجع…', 'lois.tous': 'الكل',
+    'lois.commission_en_charge': 'اللجنة المكلفة', 'lois.rapporteur': 'المقرر',
+    'lois.depose_par': 'أودعه', 'lois.date_depot': 'أودع في', 'lois.type_projet': 'مشروع قانون',
+    'lois.type_proposition': 'مقترح قانون', 'lois.consulter': 'الاطلاع على النص', 'lois.retour': 'العودة إلى النصوص',
+    'loi.etapes': 'مسار المراحل المنجزة', 'loi.articles': 'مواد النص', 'loi.documents': 'وثائق مرتبطة',
+    'loi.aucun_article': 'لم تُنشر مواد هذا النص بعد.',
+
+    'statut.depose': 'مودَع', 'statut.en_commission': 'في اللجنة', 'statut.en_debat': 'قيد المناقشة',
+    'statut.au_vote': 'في التصويت', 'statut.adopte': 'معتمَد', 'statut.promulgue': 'صادر',
+    'statut.rejete': 'مرفوض', 'statut.retire': 'مسحوب',
+    'priorite.normale': 'عادية', 'priorite.prioritaire': 'ذات أولوية', 'priorite.urgence_nationale': 'استعجال وطني',
+    'etape.depot': 'الإيداع', 'etape.commission': 'اللجنة', 'etape.pleniere': 'الجلسة العامة',
+    'etape.vote': 'التصويت', 'etape.promulgation': 'الإصدار',
+
+    'scrutins.titre': 'سجل التصويتات', 'scrutins.sous_titre': 'النتائج المجمَّعة للاقتراعات العلنية في الجلسات العامة.',
+    'scrutins.dev_titre': 'الوحدة قيد التطوير',
+    'scrutins.dev_texte': 'نظام التصويت الإلكتروني في قاعة الجلسات في طور النشر. ستُنشر نتائج الاقتراعات هنا فور تشغيله.',
+    'scrutins.pour': 'موافق', 'scrutins.contre': 'معارض', 'scrutins.abstention': 'ممتنع',
+    'scrutins.votants': 'المصوّتون', 'scrutins.adopte': 'معتمَد', 'scrutins.rejete': 'مرفوض',
+    'scrutins.archives_titre': 'أرشيف التصويتات',
+    'scrutins.archives_texte': 'ستُضاف الاقتراعات السابقة تدريجيًا إلى قاعدة البيانات مع تقدّم الرقمنة.',
+
+    'deputes.titre': 'نواب الأمة', 'deputes.sous_titre': 'ابحثوا عن النواب بالاسم أو الكتلة البرلمانية أو الإقليم أو اللجنة.',
+    'deputes.rechercher': 'البحث عن نائب…', 'deputes.toutes_provinces': 'كل الأقاليم',
+    'deputes.tous_groupes': 'كل الكتل', 'deputes.toutes_commissions': 'كل اللجان',
+    'deputes.commissions': 'اللجان', 'deputes.taux_presence': 'نسبة الحضور',
+    'deputes.retour': 'العودة إلى دليل النواب', 'deputes.circonscription': 'الدائرة الانتخابية',
+    'deputes.groupe': 'الكتلة البرلمانية', 'deputes.ecrire': 'مراسلة هذا النائب', 'deputes.resultat': 'نائبًا',
+
+    'documents.titre': 'مكتبة الوثائق', 'documents.sous_titre': 'القوانين الصادرة والتقارير والمحاضر واللوائح الرسمية.',
+    'documents.rechercher': 'البحث عن وثيقة…', 'documents.toutes_categories': 'كل الفئات',
+    'documents.telecharger': 'تحميل', 'documents.acces_public': 'عمومي', 'documents.acces_interne': 'داخلي',
+    'documents.acces_confidentiel': 'سرّي', 'documents.note_connexion': 'بعض الوثائق الداخلية لا تظهر إلا بعد تسجيل الدخول.',
+    'doc.loi_adoptee': 'قانون معتمد', 'doc.rapport': 'تقرير', 'doc.proces_verbal': 'محضر',
+    'doc.reglement': 'لائحة', 'doc.ordre_du_jour': 'جدول أعمال', 'doc.autre': 'أخرى',
+
+    'citoyen.titre': 'فضاء المواطن', 'citoyen.sous_titre': 'راسلوا نائبكم أو إحدى اللجان، ووقّعوا العرائض: صوتكم مسموع.',
+    'citoyen.form_titre': 'مراسلة نائب أو لجنة', 'citoyen.nom': 'الاسم الكامل',
+    'citoyen.contact': 'الهاتف أو البريد الإلكتروني', 'citoyen.province': 'الإقليم',
+    'citoyen.choisir_province': 'اختر إقليمك…', 'citoyen.destinataire': 'المرسَل إليه',
+    'citoyen.dest_depute': 'نائب', 'citoyen.dest_commission': 'لجنة', 'citoyen.choisir_depute': 'اختر نائبًا…',
+    'citoyen.choisir_commission': 'اختر لجنة…', 'citoyen.sujet': 'الموضوع', 'citoyen.message': 'رسالتك',
+    'citoyen.message_ph': 'صف انشغالك أو سؤالك أو اقتراحك…', 'citoyen.envoyer': 'إرسال الرسالة',
+    'citoyen.envoye_titre': 'تم إرسال الرسالة', 'citoyen.envoye_texte': 'سُجِّلت رسالتك تحت المرجع',
+    'citoyen.petitions': 'العرائض المواطنية', 'citoyen.signatures': 'توقيعًا', 'citoyen.objectif': 'الهدف',
+    'citoyen.signer': 'توقيع هذه العريضة', 'citoyen.signee': 'تم تسجيل التوقيع',
+    'citoyen.petition_traitee': 'عولجت', 'citoyen.petition_cloturee': 'أُغلقت', 'citoyen.nouveau_message': 'إرسال رسالة أخرى',
+
+    'auth.titre': 'الفضاء الآمن', 'auth.sous_titre': 'مخصص للنواب وموظفي الجمعية الوطنية.',
+    'auth.identifiant': 'رقم التسجيل أو البريد المؤسسي', 'auth.identifiant_ph': 'مثال: DEP-014',
+    'auth.mdp': 'كلمة المرور', 'auth.se_connecter': 'تسجيل الدخول', 'auth.otp_titre': 'التحقق بخطوتين',
+    'auth.otp_sous_titre': 'أدخل الرمز المكوَّن من 6 أرقام من تطبيق المصادقة.',
+    'auth.otp_valider': 'التحقق من الرمز', 'auth.otp_retour': 'العودة إلى تسجيل الدخول',
+    'auth.note_securite': 'اتصال مشفَّر — بياناتكم لا تُشارك أبدًا.', 'auth.public_lien': 'العودة إلى البوابة',
+    'auth.erreur': 'المعرِّف أو كلمة المرور غير صحيحة.', 'auth.otp_erreur': 'رمز غير صحيح أو منتهي الصلاحية. حاول مجددًا.',
+
+    'bo.titre': 'فضاء النائب', 'bo.bonjour': 'مرحبًا', 'bo.presence': 'الحضور في الجلسات',
+    'bo.seances_suivies': 'جلسة مسجَّلة', 'bo.mes_commissions': 'لجاني', 'bo.agenda_perso': 'جدولي',
+    'bo.documents_seance': 'وثائق الجلسات', 'bo.role_rapporteur': 'مقرر', 'bo.role_membre': 'عضو',
+    'bo.role_president': 'رئيس(ة)', 'bo.role_vice_president': 'نائب الرئيس', 'bo.scrutin_ouvert': 'اقتراع مفتوح',
+    'bo.aucun_scrutin': 'لا يوجد اقتراع مفتوح حاليًا', 'bo.aucun_scrutin_desc': 'عند الدعوة إلى تصويت في الجلسة، سيظهر هنا.',
+    'bo.voter': 'تأكيد تصويتي', 'bo.vote_enregistre': 'تم تسجيل تصويتك',
+    'bo.mdp_a_changer': 'الأمان: يجب تغيير كلمة المرور الأولية.', 'bo.activer_2fa': 'تفعيل المصادقة الثنائية (2FA)',
+    'bo.2fa_active': 'المصادقة الثنائية مفعَّلة', 'bo.notifications': 'الإشعارات', 'bo.tableau': 'لوحة القيادة',
+    'bo.doc_internes': 'آخر الوثائق الداخلية', 'bo.vote_requis': 'تصويت إلكتروني مطلوب',
+
+    'legal.mentions': 'الإشعارات القانونية', 'legal.confidentialite': 'سياسة الخصوصية',
+
+    'commun.vide_titre': 'لا توجد بيانات متاحة حاليًا', 'commun.vide_texte': 'ستُنشر المعلومات هنا فور توفرها.',
+    'commun.erreur_titre': 'تعذر الاتصال', 'commun.erreur_texte': 'الخادم غير متاح مؤقتًا. تحقق من اتصالك ثم أعد المحاولة.',
+    'commun.reessayer': 'إعادة المحاولة', 'commun.envoi': 'جارٍ الإرسال…',
+    'commun.demo': 'منصة تجريبية — البيانات المعروضة وهمية.', 'commun.ko': 'ك.ب', 'commun.mo': 'م.ب', 'commun.ref': 'مرجع',
+    'a11y.contenu': 'الانتقال إلى المحتوى',
+    'footer.desc': 'AN Connect Tchad هي المنصة الرقمية الرسمية لمتابعة النشاط البرلماني والمشاركة في الحياة الديمقراطية.',
+    'footer.institution': 'المؤسسة', 'footer.legislation': 'التشريع', 'footer.contact': 'اتصال',
+    'footer.apropos': 'عن الجمعية', 'footer.president': 'الرئيس', 'footer.groupes': 'الكتل البرلمانية',
+    'footer.commissions': 'اللجان', 'footer.copyright': '© 2026 الجمعية الوطنية لجمهورية تشاد. جميع الحقوق محفوظة.',
+  },
+};
+
+const I18nCtx = createContext(null);
+
+export function I18nProvider({ children }) {
+  const [lang, setLang] = useState(() => localStorage.getItem('an_langue') || 'fr');
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    localStorage.setItem('an_langue', lang);
+    document.title = 'AN Connect Tchad';
+  }, [lang]);
+
+  const value = useMemo(() => {
+    const locale = lang === 'ar' ? 'ar-TD' : 'fr-FR';
+    const t = (cle) => I18N[lang]?.[cle] ?? I18N.fr[cle] ?? cle;
+    const fmtDate = (iso, opts = { day: 'numeric', month: 'long', year: 'numeric' }) => {
+      if (!iso) return '—';
+      const d = new Date(String(iso).replace(' ', 'T'));
+      return isNaN(d) ? iso : new Intl.DateTimeFormat(locale, opts).format(d);
+    };
+    return {
+      lang, dir: lang === 'ar' ? 'rtl' : 'ltr', locale, t, fmtDate,
+      fmtTime: (iso) => fmtDate(iso, { hour: '2-digit', minute: '2-digit' }),
+      toggle: () => setLang((l) => (l === 'fr' ? 'ar' : 'fr')),
+      nombre: (n) => Number(n).toLocaleString(locale),
+    };
+  }, [lang]);
+
+  return <I18nCtx.Provider value={value}>{children}</I18nCtx.Provider>;
+}
+
+export const useI18n = () => useContext(I18nCtx);

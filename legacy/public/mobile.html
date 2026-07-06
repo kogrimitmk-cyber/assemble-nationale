@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AN Connect Tchad — Design application mobile (React Native / Expo)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@700&family=Noto+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles.css">
+<style>
+/* ═══ Présentation des maquettes mobiles ═══
+   Cette page est le livrable de design des écrans de l'application
+   React Native / Expo. Chaque cadre = un écran, avec ses états. */
+body { background: #EDEBE4; }
+.spec-entete { background: var(--bleu-fonce); color: #fff; padding: 44px 24px 38px; }
+.spec-entete-inner { max-width: 1240px; margin: 0 auto; }
+.spec-entete h1 { font-family: var(--f-display); font-size: clamp(26px, 4vw, 38px); }
+.spec-entete p { color: rgba(255,255,255,.78); max-width: 76ch; margin-top: 8px; font-size: 15px; }
+.spec-corps { max-width: 1240px; margin: 0 auto; padding: 36px 24px 80px; }
+.spec-section { font-family: var(--f-display); font-size: 24px; color: var(--bleu-fonce); margin: 40px 0 6px; }
+.spec-note { font-size: 13.5px; color: var(--texte-2); margin-bottom: 22px; max-width: 86ch; }
+.cadres { display: flex; flex-wrap: wrap; gap: 34px; align-items: flex-start; }
+.cadre-bloc { width: 300px; }
+.cadre-titre { font-weight: 700; font-size: 14px; color: var(--bleu-fonce); margin: 12px 0 2px; }
+.cadre-desc { font-size: 12px; color: var(--texte-2); line-height: 1.5; }
+
+/* Cadre téléphone */
+.tel {
+  width: 300px; height: 630px; background: var(--fond);
+  border-radius: 34px; border: 8px solid #10182B;
+  overflow: hidden; position: relative;
+  box-shadow: 0 18px 50px rgba(16,24,43,.28);
+  display: flex; flex-direction: column;
+  font-size: 13px;
+}
+.tel-statut {
+  height: 30px; background: var(--bleu); color: #fff;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px; font-size: 10.5px; font-weight: 600; flex-shrink: 0;
+}
+.tel-encoche { width: 78px; height: 16px; background: #10182B; border-radius: 10px; }
+.tel-entete {
+  background: var(--bleu); color: #fff; padding: 8px 14px 12px;
+  display: flex; align-items: center; gap: 9px; flex-shrink: 0;
+  border-bottom: 3px solid var(--or);
+}
+.tel-entete .tb-seal { width: 30px; height: 30px; border-width: 1.5px; }
+.tel-entete .tb-seal svg { width: 26px; height: 26px; }
+.tel-entete-titre { font-family: var(--f-display); font-size: 13.5px; font-weight: 700; line-height: 1.1; }
+.tel-entete-sous { font-size: 8.5px; color: var(--or-vif); letter-spacing: 1px; text-transform: uppercase; }
+[dir="rtl"] .tel-entete-sous { letter-spacing: 0; }
+.tel-corps { flex: 1; overflow: hidden; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.tel-tabbar {
+  flex-shrink: 0; background: var(--surface); border-top: 1px solid var(--bordure);
+  display: grid; grid-template-columns: repeat(5, 1fr); padding: 6px 4px 10px;
+}
+.tel-tab { display: flex; flex-direction: column; align-items: center; gap: 2px;
+  font-size: 8.5px; font-weight: 600; color: var(--texte-2); }
+.tel-tab .ic { width: 19px; height: 19px; }
+.tel-tab.actif { color: var(--bleu); }
+.tel-tab.actif .ic { color: var(--bleu); }
+
+/* Composants compacts pour les cadres */
+.tel .carte { border-radius: 12px; box-shadow: none; }
+.tel .carte-corps { padding: 11px 12px; }
+.tel .carte-tete { padding: 10px 12px; }
+.tel .carte-titre { font-size: 13.5px; }
+.tel .carte-titre .ic { width: 15px; height: 15px; }
+.tel .badge { font-size: 9.5px; padding: 2px 8px; }
+.tel .badge .ic { width: 10px; height: 10px; }
+.tel .btn { min-height: 40px; font-size: 12px; padding: 8px 14px; border-radius: 9px; }
+.tel .btn .ic { width: 14px; height: 14px; }
+.tel .loi-ref { font-size: 9.5px; padding: 2px 7px; }
+.tel .champ { min-height: 40px; font-size: 12px; padding: 9px 11px; border-radius: 9px; }
+.tel .champ-label { font-size: 11px; margin-bottom: 3px; }
+.tel .champ-groupe { margin-bottom: 9px; }
+.tel h2.tel-titre-page { font-family: var(--f-display); font-size: 19px; color: var(--bleu-fonce); line-height: 1.15; }
+.tel .sous-titre-tel { font-size: 11px; color: var(--texte-2); }
+.tel .prog-lbl { font-size: 7px; max-width: 40px; }
+.tel .prog-point { width: 14px; height: 14px; border-width: 2px; }
+.tel .prog-etape.actuelle .prog-point::after { width: 5px; height: 5px; }
+.tel .prog-etape::before { top: 6px; height: 2px; }
+.tel .etat-vide { padding: 26px 14px; }
+.tel .etat-vide .ev-icone { width: 52px; height: 52px; }
+.tel .etat-vide .ev-icone .ic { width: 26px; height: 26px; }
+.tel .etat-vide h3 { font-size: 15px; }
+.tel .etat-vide p { font-size: 11px; }
+.tel .seance-item { padding: 10px 2px; gap: 9px; }
+.tel .seance-date { width: 44px; padding: 5px 2px; border-radius: 9px; }
+.tel .seance-date .sd-jour { font-size: 16px; }
+.tel .seance-date .sd-mois { font-size: 8px; }
+.tel .seance-titre { font-size: 11.5px; }
+.tel .seance-meta { font-size: 9.5px; gap: 8px; }
+.tel .seance-meta .ic { width: 10px; height: 10px; }
+.tel .bandeau { padding: 9px 11px; font-size: 10.5px; border-radius: 10px; margin-bottom: 0; }
+.tel .bandeau .ic { width: 14px; height: 14px; }
+.tel .otp-case { width: 34px; height: 44px; font-size: 18px; border-radius: 8px; }
+.tel .timeline { padding-inline-start: 20px; }
+.tel .timeline::before { inset-inline-start: 6px; }
+.tel .tl-point { width: 14px; height: 14px; inset-inline-start: -20px; border-width: 2px; }
+.tel .tl-titre { font-size: 11px; }
+.tel .tl-desc { font-size: 9.5px; }
+.tel .tl-date { font-size: 9px; }
+.tel .depute-photo { width: 44px; height: 44px; font-size: 14px; margin-bottom: 6px; border-width: 2px; }
+.tel .depute-nom { font-size: 12px; }
+.tel .depute-fonction { font-size: 8.5px; margin: 0 0 3px; }
+.tel .depute-carte { padding: 12px 6px 10px; }
+.tel .petition-prog-track { height: 6px; margin: 6px 0 4px; }
+.tel .petition-compte { font-size: 9.5px; }
+
+/* Clavier numérique OTP */
+.pave { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-top: auto; }
+.pave button {
+  min-height: 44px; border: none; border-radius: 10px;
+  background: var(--surface); font-family: var(--f-ui);
+  font-size: 17px; font-weight: 600; color: var(--encre);
+  box-shadow: 0 1px 2px rgba(20,33,58,.1);
+}
+.pave button.pave-action { background: transparent; box-shadow: none; color: var(--bleu-vif); font-size: 12px; }
+
+/* Swatches design system */
+.swatches { display: flex; flex-wrap: wrap; gap: 14px; margin: 14px 0 6px; }
+.swatch { width: 130px; border-radius: 12px; overflow: hidden; border: 1px solid var(--bordure); background: var(--surface); }
+.swatch-c { height: 62px; }
+.swatch-info { padding: 8px 10px; font-size: 11px; }
+.swatch-info strong { display: block; font-size: 12px; }
+.compo-rangee { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; background: var(--surface); border: 1px solid var(--bordure); border-radius: 14px; padding: 18px; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="i-accueil" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.8V21h14V9.8"/><path d="M9.5 21v-6h5v6"/></symbol>
+  <symbol id="i-calendrier" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-balance" viewBox="0 0 24 24"><path d="M12 3v18M8 21h8M4.5 6.5h15"/><path d="M7 6.5 3.5 13.5a3.5 3.5 0 0 0 7 0Z"/><path d="M17 6.5l-3.5 7a3.5 3.5 0 0 0 7 0Z"/></symbol>
+  <symbol id="i-urne" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8.5 12.5 2.5 2.5 5-5.5"/></symbol>
+  <symbol id="i-deputes" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3.5 20c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><circle cx="17" cy="9" r="2.6"/><path d="M17 14.6c2.4 0 4.3 1.7 4.3 4.4"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9.5 12h5M9.5 16h5"/></symbol>
+  <symbol id="i-citoyen" viewBox="0 0 24 24"><path d="M4 4.5h16v10a1.5 1.5 0 0 1-1.5 1.5H9.5L4 20z"/><path d="M8 8.5h8M8 12h5"/></symbol>
+  <symbol id="i-cadenas" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3M12 14.5v2"/></symbol>
+  <symbol id="i-bouclier" viewBox="0 0 24 24"><path d="m12 3 7 2.8v6.2c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V5.8z"/><path d="m9 11.5 2 2 4-4.5"/></symbol>
+  <symbol id="i-recherche" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 5 5"/></symbol>
+  <symbol id="i-horloge" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-lieu" viewBox="0 0 24 24"><path d="M12 21s-6.5-5.2-6.5-10a6.5 6.5 0 0 1 13 0C18.5 15.8 12 21 12 21z"/><circle cx="12" cy="10.8" r="2.4"/></symbol>
+  <symbol id="i-coche" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7"/></symbol>
+  <symbol id="i-alerte" viewBox="0 0 24 24"><path d="M12 4 2.5 20h19z"/><path d="M12 10.5v4M12 17.4v.01"/></symbol>
+  <symbol id="i-horsligne" viewBox="0 0 24 24"><path d="M3 3l18 18M5 11.5a10 10 0 0 1 6.5-2.9M16.5 10a10 10 0 0 1 2.5 1.5M8.5 15a5.5 5.5 0 0 1 4.5-1.4M12 19h.01"/></symbol>
+  <symbol id="i-fleche" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-vide" viewBox="0 0 24 24"><path d="M4 13l2.8-8h10.4L20 13v6H4z"/><path d="M4 13h5l1.5 2.5h3L15 13h5"/></symbol>
+  <symbol id="i-envoyer" viewBox="0 0 24 24"><path d="M21 3 10.5 13.5M21 3l-7 18-3.5-7.5L3 10z"/></symbol>
+  <symbol id="i-utilisateur" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.5-3.5 4.2-5 7.5-5s6 1.5 7.5 5"/></symbol>
+  <symbol id="i-cloche" viewBox="0 0 24 24"><path d="M6 16.5v-5.5a6 6 0 0 1 12 0v5.5l1.5 2H4.5z"/><path d="M10.5 21a2 2 0 0 0 3 0"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8v.01"/></symbol>
+  <symbol id="i-outil" viewBox="0 0 24 24"><path d="M20.5 6.5a5 5 0 0 1-6.5 6L7 19.5a2.1 2.1 0 0 1-3-3L11 9.5a5 5 0 0 1 6-6.5L14 6l.5 3.5L18 10z"/></symbol>
+</svg>
+
+<header class="spec-entete">
+  <div class="spec-entete-inner">
+    <div class="eyebrow" style="color:var(--or-vif)">AN Connect Tchad · Livrable de design</div>
+    <h1>Application mobile citoyenne &amp; député — React Native / Expo</h1>
+    <p>Déclinaison mobile-first du design system du portail web : mêmes jetons de couleur, mêmes composants
+       (boutons, cartes, badges de statut, barre de progression législative), pensée pour un usage terrain —
+       connexion lente, plein soleil (contrastes AA), zones tactiles ≥ 44 px, bilingue FR/AR avec miroir RTL complet.</p>
+  </div>
+</header>
+
+<div class="spec-corps">
+
+  <!-- ══ MINI DESIGN SYSTEM ══ -->
+  <h2 class="spec-section">Mini design system partagé web + mobile</h2>
+  <p class="spec-note">Jetons exportables tels quels vers React Native (StyleSheet / thème). L'or n'est jamais utilisé
+     pour du texte long (contraste) : la variante « or texte » sert aux libellés courts sur fond clair. Le rouge est
+     réservé aux alertes et à l'urgence nationale.</p>
+  <div class="swatches">
+    <div class="swatch"><div class="swatch-c" style="background:#002B7F"></div><div class="swatch-info"><strong>Bleu institution</strong>#002B7F</div></div>
+    <div class="swatch"><div class="swatch-c" style="background:#001A4D"></div><div class="swatch-info"><strong>Bleu foncé</strong>#001A4D</div></div>
+    <div class="swatch"><div class="swatch-c" style="background:#1A4A9E"></div><div class="swatch-info"><strong>Bleu interactif</strong>#1A4A9E</div></div>
+    <div class="swatch"><div class="swatch-c" style="background:#D4A843"></div><div class="swatch-info"><strong>Or accent</strong>#D4A843</div></div>
+    <div class="swatch"><div class="swatch-c" style="background:#8B6914"></div><div class="swatch-info"><strong>Or texte (AA)</strong>#8B6914</div></div>
+    <div class="swatch"><div class="swatch-c" style="background:#C62828"></div><div class="swatch-info"><strong>Rouge alerte</strong>#C62828</div></div>
+    <div class="swatch"><div class="swatch-c" style="background:#2E7D32"></div><div class="swatch-info"><strong>Vert validation</strong>#2E7D32</div></div>
+    <div class="swatch"><div class="swatch-c" style="background:#F7F7FA;border-bottom:1px solid #E8E8ED"></div><div class="swatch-info"><strong>Fond neige</strong>#F7F7FA</div></div>
+  </div>
+  <div class="compo-rangee">
+    <span style="font-family:var(--f-display);font-size:22px;font-weight:700;color:var(--bleu-fonce)">Cormorant Garamond — titres</span>
+    <span style="font-size:14px">Inter — interface &amp; texte courant</span>
+    <span style="font-family:'Noto Naskh Arabic';font-size:21px;font-weight:700;color:var(--bleu-fonce)" lang="ar" dir="rtl">نوتو نسخ — للعناوين العربية</span>
+    <span style="font-family:'Noto Sans Arabic';font-size:13.5px" lang="ar" dir="rtl">نوتو سانس — لواجهة الاستخدام العربية</span>
+  </div>
+  <div class="compo-rangee">
+    <button class="btn btn-primaire">Bouton principal</button>
+    <button class="btn btn-or">Accent or</button>
+    <button class="btn btn-contour">Contour</button>
+    <span class="badge badge-vert"><svg class="ic ic-sm"><use href="#i-coche"/></svg>Adopté</span>
+    <span class="badge badge-or">Au vote</span>
+    <span class="badge badge-bleu">En commission</span>
+    <span class="badge badge-urgence"><svg class="ic ic-sm"><use href="#i-alerte"/></svg>Urgence nationale</span>
+    <span class="badge badge-or"><svg class="ic ic-sm"><use href="#i-cadenas"/></svg>Interne</span>
+  </div>
+  <div class="compo-rangee" style="display:block">
+    <div style="font-size:12px;font-weight:700;color:var(--texte-2);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Barre de progression législative (dépôt → promulgation)</div>
+    <div class="prog-legis">
+      <div class="prog-etape faite"><div class="prog-point"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m5 12.5 4.5 4.5L19 7"/></svg></div><div class="prog-lbl">Dépôt</div></div>
+      <div class="prog-etape faite"><div class="prog-point"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m5 12.5 4.5 4.5L19 7"/></svg></div><div class="prog-lbl">Commission</div></div>
+      <div class="prog-etape actuelle"><div class="prog-point"></div><div class="prog-lbl">Plénière</div></div>
+      <div class="prog-etape"><div class="prog-point"></div><div class="prog-lbl">Vote</div></div>
+      <div class="prog-etape"><div class="prog-point"></div><div class="prog-lbl">Promulgation</div></div>
+    </div>
+  </div>
+
+  <!-- ══ ÉCRANS CITOYENS ══ -->
+  <h2 class="spec-section">Parcours citoyen (mobile-first)</h2>
+  <p class="spec-note">Navigation par barre d'onglets (5 entrées maximum). Le résumé du jour est la première chose visible :
+     séance en cours, dernière actualité, accès rapides.</p>
+
+  <div class="cadres">
+
+    <!-- 1. Accueil -->
+    <div class="cadre-bloc">
+      <div class="tel">
+        <div class="tel-statut"><span>09:41</span><span class="tel-encoche"></span><span>4G ▂▄▆</span></div>
+        <div class="tel-entete">
+          <span class="tb-seal"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="#fff" stroke="#002B7F" stroke-width="3"/><path d="M44 16 L56 16 L60 23 L62 36 L61 50 L63 62 L59 77 L56 84 L44 84 L41 77 L37 62 L39 50 L38 36 L40 23 Z" fill="#002B7F"/></svg></span>
+          <div><div class="tel-entete-titre">Assemblée Nationale</div><div class="tel-entete-sous">République du Tchad</div></div>
+        </div>
+        <div class="tel-corps">
+          <h2 class="tel-titre-page">Bonjour 👋</h2>
+          <div class="carte" style="border-inline-start:4px solid var(--vert)">
+            <div class="carte-corps">
+              <span class="badge badge-vert">En cours</span>
+              <div style="font-weight:700;font-size:12.5px;margin-top:5px">Séance plénière n°12 — Vote solennel LFR 2026</div>
+              <div style="font-size:10px;color:var(--texte-2);margin-top:2px"><svg class="ic ic-sm"><use href="#i-lieu"/></svg> Hémicycle · depuis 09h00</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="carte carte-corps" style="text-align:center">
+              <svg class="ic ic-lg" style="color:var(--bleu)"><use href="#i-balance"/></svg>
+              <div style="font-weight:600;font-size:11px;margin-top:4px">Suivre les lois</div>
+            </div>
+            <div class="carte carte-corps" style="text-align:center">
+              <svg class="ic ic-lg" style="color:var(--or-texte)"><use href="#i-envoyer"/></svg>
+              <div style="font-weight:600;font-size:11px;margin-top:4px">Écrire à mon député</div>
+            </div>
+          </div>
+          <div class="carte">
+            <div class="carte-tete"><span class="carte-titre"><svg class="ic"><use href="#i-cloche"/></svg>Actualité</span></div>
+            <div class="carte-corps">
+              <div style="font-weight:600;font-size:11.5px">Procédure d'urgence — réponse humanitaire à l'Est</div>
+              <div style="font-size:9.5px;color:var(--texte-2);margin-top:2px">28 juin 2026 · Commission Santé</div>
+            </div>
+          </div>
+        </div>
+        <div class="tel-tabbar">
+          <div class="tel-tab actif"><svg class="ic"><use href="#i-accueil"/></svg>Accueil</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-calendrier"/></svg>Agenda</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-balance"/></svg>Lois</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-deputes"/></svg>Députés</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-citoyen"/></svg>Citoyen</div>
+        </div>
+      </div>
+      <div class="cadre-titre">1 · Accueil citoyen</div>
+      <div class="cadre-desc">Résumé du jour : séance en direct (bord vert), 2 accès rapides, dernière actualité. Tout tient sans défilement.</div>
+    </div>
+
+    <!-- 2. Agenda -->
+    <div class="cadre-bloc">
+      <div class="tel">
+        <div class="tel-statut"><span>09:41</span><span class="tel-encoche"></span><span>4G ▂▄▆</span></div>
+        <div class="tel-entete">
+          <span class="tb-seal"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="#fff" stroke="#002B7F" stroke-width="3"/><path d="M44 16 L56 16 L60 23 L62 36 L61 50 L63 62 L59 77 L56 84 L44 84 L41 77 L37 62 L39 50 L38 36 L40 23 Z" fill="#002B7F"/></svg></span>
+          <div><div class="tel-entete-titre">Agenda des séances</div><div class="tel-entete-sous">Session ordinaire 2026</div></div>
+        </div>
+        <div class="tel-corps">
+          <div style="display:flex;gap:6px">
+            <span class="badge badge-bleu" style="border:1.5px solid var(--bleu)">Toutes</span>
+            <span class="badge badge-contour">Plénières</span>
+            <span class="badge badge-contour">Commissions</span>
+          </div>
+          <div class="carte">
+            <div class="seance-item">
+              <div class="seance-date"><div class="sd-jour">6</div><div class="sd-mois">juil</div></div>
+              <div class="seance-corps">
+                <span class="badge badge-bleu">Prévue</span>
+                <div class="seance-titre">Commission Santé — PLU-2026-045 (urgence)</div>
+                <div class="seance-meta"><span><svg class="ic"><use href="#i-horloge"/></svg>10h00</span><span><svg class="ic"><use href="#i-lieu"/></svg>Salle C</span></div>
+              </div>
+            </div>
+            <div class="seance-item" style="background:var(--or-pale)">
+              <div class="seance-date"><div class="sd-jour">8</div><div class="sd-mois">juil</div></div>
+              <div class="seance-corps">
+                <span class="badge badge-or">Suivie 🔔</span>
+                <div class="seance-titre">Séance plénière n°12 — Vote solennel LFR 2026</div>
+                <div class="seance-meta"><span><svg class="ic"><use href="#i-horloge"/></svg>09h00</span><span><svg class="ic"><use href="#i-lieu"/></svg>Hémicycle</span></div>
+              </div>
+            </div>
+            <div class="seance-item">
+              <div class="seance-date"><div class="sd-jour">15</div><div class="sd-mois">juil</div></div>
+              <div class="seance-corps">
+                <span class="badge badge-bleu">Prévue</span>
+                <div class="seance-titre">Ouverture de la session extraordinaire</div>
+                <div class="seance-meta"><span><svg class="ic"><use href="#i-horloge"/></svg>10h00</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="bandeau bandeau-info"><svg class="ic"><use href="#i-cloche"/></svg><div>Rappel activé : vous serez notifié 1 h avant la séance suivie.</div></div>
+        </div>
+        <div class="tel-tabbar">
+          <div class="tel-tab"><svg class="ic"><use href="#i-accueil"/></svg>Accueil</div>
+          <div class="tel-tab actif"><svg class="ic"><use href="#i-calendrier"/></svg>Agenda</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-balance"/></svg>Lois</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-deputes"/></svg>Députés</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-citoyen"/></svg>Citoyen</div>
+        </div>
+      </div>
+      <div class="cadre-titre">2 · Agenda mobile</div>
+      <div class="cadre-desc">Liste compacte filtrable par puces. La séance « suivie » est surlignée or, avec confirmation du rappel de notification.</div>
+    </div>
+
+    <!-- 3. Suivi loi -->
+    <div class="cadre-bloc">
+      <div class="tel">
+        <div class="tel-statut"><span>09:41</span><span class="tel-encoche"></span><span>3G ▂▄</span></div>
+        <div class="tel-entete">
+          <svg class="ic ic-dir" style="color:#fff;transform:rotate(180deg)"><use href="#i-fleche"/></svg>
+          <div><div class="tel-entete-titre">Suivi du texte</div><div class="tel-entete-sous">PLF-2026-042</div></div>
+        </div>
+        <div class="tel-corps" style="overflow-y:auto">
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <span class="loi-ref">PLF-2026-042</span>
+            <span class="badge badge-or">Au vote</span>
+            <span class="badge badge-or">Prioritaire</span>
+          </div>
+          <h2 class="tel-titre-page" style="font-size:15px">Loi de finances rectificative 2026</h2>
+          <div class="carte carte-corps">
+            <div class="prog-legis">
+              <div class="prog-etape faite"><div class="prog-point"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m5 12.5 4.5 4.5L19 7"/></svg></div><div class="prog-lbl">Dépôt</div></div>
+              <div class="prog-etape faite"><div class="prog-point"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m5 12.5 4.5 4.5L19 7"/></svg></div><div class="prog-lbl">Commission</div></div>
+              <div class="prog-etape faite"><div class="prog-point"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m5 12.5 4.5 4.5L19 7"/></svg></div><div class="prog-lbl">Plénière</div></div>
+              <div class="prog-etape actuelle"><div class="prog-point"></div><div class="prog-lbl">Vote</div></div>
+              <div class="prog-etape"><div class="prog-point"></div><div class="prog-lbl">Promulgation</div></div>
+            </div>
+          </div>
+          <div class="carte">
+            <div class="carte-tete"><span class="carte-titre"><svg class="ic"><use href="#i-horloge"/></svg>Étapes franchies</span></div>
+            <div class="carte-corps">
+              <div class="timeline">
+                <div class="tl-item"><div class="tl-point"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m5 12.5 4.5 4.5L19 7"/></svg></div>
+                  <div class="tl-titre">Débat en séance plénière</div><div class="tl-date">10 juin 2026</div></div>
+                <div class="tl-item"><div class="tl-point"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m5 12.5 4.5 4.5L19 7"/></svg></div>
+                  <div class="tl-titre">Rapport adopté en commission</div><div class="tl-desc">4 amendements retenus</div><div class="tl-date">28 mai 2026</div></div>
+                <div class="tl-item"><div class="tl-point"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m5 12.5 4.5 4.5L19 7"/></svg></div>
+                  <div class="tl-titre">Dépôt du texte</div><div class="tl-date">5 mai 2026</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cadre-titre">3 · Suivi d'un projet de loi</div>
+      <div class="cadre-desc">Version condensée du détail web : stepper compact puis fil chronologique, pensés pour le scroll en mobilité.</div>
+    </div>
+
+    <!-- 4. Trombinoscope -->
+    <div class="cadre-bloc">
+      <div class="tel">
+        <div class="tel-statut"><span>09:41</span><span class="tel-encoche"></span><span>4G ▂▄▆</span></div>
+        <div class="tel-entete">
+          <span class="tb-seal"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="#fff" stroke="#002B7F" stroke-width="3"/><path d="M44 16 L56 16 L60 23 L62 36 L61 50 L63 62 L59 77 L56 84 L44 84 L41 77 L37 62 L39 50 L38 36 L40 23 Z" fill="#002B7F"/></svg></span>
+          <div><div class="tel-entete-titre">Les députés</div><div class="tel-entete-sous">22 élus · démonstration</div></div>
+        </div>
+        <div class="tel-corps">
+          <div style="position:relative">
+            <svg class="ic" style="position:absolute;inset-inline-start:10px;top:11px;color:var(--texte-2);width:16px;height:16px"><use href="#i-recherche"/></svg>
+            <input class="champ" style="padding-inline-start:32px" placeholder="Nom, groupe, circonscription…" value="Ouaddaï">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="carte depute-carte">
+              <div class="depute-photo">AY</div>
+              <div class="depute-nom">Amina Youssouf</div>
+              <div class="depute-fonction">Députée</div>
+              <span class="badge badge-bleu">RNDT–Le Réveil</span>
+              <div style="font-size:9px;color:var(--texte-2);margin-top:3px"><svg class="ic ic-sm"><use href="#i-lieu"/></svg> Ouaddaï</div>
+            </div>
+            <div class="carte depute-carte">
+              <div class="depute-photo">AB</div>
+              <div class="depute-nom">Abdelkerim Barka</div>
+              <div class="depute-fonction">1er Vice-Président</div>
+              <span class="badge badge-bleu">MPS</span>
+              <div style="font-size:9px;color:var(--texte-2);margin-top:3px"><svg class="ic ic-sm"><use href="#i-lieu"/></svg> Ouaddaï</div>
+            </div>
+          </div>
+          <div style="text-align:center;font-size:10px;color:var(--texte-2)">2 élus trouvés pour « Ouaddaï »</div>
+        </div>
+        <div class="tel-tabbar">
+          <div class="tel-tab"><svg class="ic"><use href="#i-accueil"/></svg>Accueil</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-calendrier"/></svg>Agenda</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-balance"/></svg>Lois</div>
+          <div class="tel-tab actif"><svg class="ic"><use href="#i-deputes"/></svg>Députés</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-citoyen"/></svg>Citoyen</div>
+        </div>
+      </div>
+      <div class="cadre-titre">4 · Trombinoscope mobile</div>
+      <div class="cadre-desc">Grille 2 colonnes, recherche instantanée unique (nom, groupe ou circonscription) plutôt que 3 filtres séparés.</div>
+    </div>
+
+    <!-- 5. Messagerie + pétitions -->
+    <div class="cadre-bloc">
+      <div class="tel">
+        <div class="tel-statut"><span>09:41</span><span class="tel-encoche"></span><span>4G ▂▄▆</span></div>
+        <div class="tel-entete">
+          <span class="tb-seal"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="#fff" stroke="#002B7F" stroke-width="3"/><path d="M44 16 L56 16 L60 23 L62 36 L61 50 L63 62 L59 77 L56 84 L44 84 L41 77 L37 62 L39 50 L38 36 L40 23 Z" fill="#002B7F"/></svg></span>
+          <div><div class="tel-entete-titre">Espace citoyen</div><div class="tel-entete-sous">Votre voix compte</div></div>
+        </div>
+        <div class="tel-corps">
+          <div class="etat-vide" style="padding:14px 10px 8px">
+            <div class="ev-icone" style="background:var(--vert-pale);color:var(--vert)"><svg class="ic ic-xl" style="width:26px;height:26px"><use href="#i-coche"/></svg></div>
+            <h3>Message transmis</h3>
+            <p>Référence <strong style="font-family:var(--f-mono)">MSG-00412</strong> — le bureau de votre député en accusera réception.</p>
+          </div>
+          <div class="carte">
+            <div class="carte-tete"><span class="carte-titre"><svg class="ic"><use href="#i-citoyen"/></svg>Pétitions actives</span></div>
+            <div class="carte-corps">
+              <strong style="font-size:11.5px">Accès à l'eau potable — province du Lac</strong>
+              <div class="petition-prog-track"><div class="petition-prog-fill" style="width:62%"></div></div>
+              <div class="petition-compte"><span><strong>1 248</strong> signatures</span><span>objectif : 2 000</span></div>
+              <button class="btn btn-or btn-bloc" style="margin-top:8px">Signer cette pétition</button>
+            </div>
+          </div>
+        </div>
+        <div class="tel-tabbar">
+          <div class="tel-tab"><svg class="ic"><use href="#i-accueil"/></svg>Accueil</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-calendrier"/></svg>Agenda</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-balance"/></svg>Lois</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-deputes"/></svg>Députés</div>
+          <div class="tel-tab actif"><svg class="ic"><use href="#i-citoyen"/></svg>Citoyen</div>
+        </div>
+      </div>
+      <div class="cadre-titre">5 · Messagerie &amp; pétitions</div>
+      <div class="cadre-desc">État de succès explicite après envoi (référence de suivi), pétition avec barre de progression or et bouton de signature pleine largeur.</div>
+    </div>
+
+    <!-- 6. Connexion 2FA -->
+    <div class="cadre-bloc">
+      <div class="tel">
+        <div class="tel-statut" style="background:var(--bleu-fonce)"><span>09:41</span><span class="tel-encoche"></span><span>4G ▂▄▆</span></div>
+        <div class="tel-corps" style="background:linear-gradient(170deg,var(--bleu-fonce),var(--bleu));gap:12px">
+          <div style="text-align:center;color:#fff;margin-top:8px">
+            <span class="tb-seal" style="width:56px;height:56px;margin:0 auto;display:flex"><svg viewBox="0 0 100 100" style="width:48px;height:48px;margin:auto"><circle cx="50" cy="50" r="47" fill="#fff" stroke="#002B7F" stroke-width="3"/><path d="M44 16 L56 16 L60 23 L62 36 L61 50 L63 62 L59 77 L56 84 L44 84 L41 77 L37 62 L39 50 L38 36 L40 23 Z" fill="#002B7F"/></svg></span>
+            <div style="font-family:var(--f-display);font-size:16px;font-weight:700;margin-top:8px">Vérification en deux étapes</div>
+            <div style="font-size:10.5px;color:rgba(255,255,255,.7);margin-top:3px">Code à 6 chiffres de votre application<br>d'authentification</div>
+          </div>
+          <div class="otp-groupe">
+            <input class="otp-case" value="4" readonly><input class="otp-case" value="8" readonly><input class="otp-case" value="2" readonly>
+            <input class="otp-case" value="7" readonly><input class="otp-case" readonly><input class="otp-case" readonly>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;justify-content:center;color:#7BD8A5;font-size:10px">
+            <svg class="ic ic-sm"><use href="#i-bouclier"/></svg>Connexion chiffrée — identifiants jamais partagés
+          </div>
+          <div class="pave">
+            <button>1</button><button>2</button><button>3</button>
+            <button>4</button><button>5</button><button>6</button>
+            <button>7</button><button>8</button><button>9</button>
+            <button class="pave-action">Annuler</button><button>0</button><button class="pave-action">⌫</button>
+          </div>
+        </div>
+      </div>
+      <div class="cadre-titre">6 · Connexion + 2FA</div>
+      <div class="cadre-desc">Clavier numérique dédié à la saisie OTP (pas de clavier système), cases larges, message de confiance vert. Même logique que le web.</div>
+    </div>
+
+    <!-- 7. Espace député -->
+    <div class="cadre-bloc">
+      <div class="tel">
+        <div class="tel-statut"><span>09:41</span><span class="tel-encoche"></span><span>4G ▂▄▆</span></div>
+        <div class="tel-entete">
+          <span class="tb-avatar" style="width:30px;height:30px;font-size:11px">FH</span>
+          <div><div class="tel-entete-titre">Hon. Fatimé Hassan</div><div class="tel-entete-sous">Députée · Wadi Fira · MPS</div></div>
+          <svg class="ic" style="color:#fff;margin-inline-start:auto"><use href="#i-cloche"/></svg>
+        </div>
+        <div class="tel-corps">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="carte carte-corps" style="text-align:center">
+              <div style="font-family:var(--f-display);font-size:21px;font-weight:700;color:var(--vert)">92 %</div>
+              <div style="font-size:9px;color:var(--texte-2)">Présence en séance</div>
+            </div>
+            <div class="carte carte-corps" style="text-align:center">
+              <div style="font-family:var(--f-display);font-size:21px;font-weight:700;color:var(--bleu)">2</div>
+              <div style="font-size:9px;color:var(--texte-2)">Commissions</div>
+            </div>
+          </div>
+          <div class="carte" style="border-top:3px solid var(--or)">
+            <div class="carte-tete"><span class="carte-titre"><svg class="ic"><use href="#i-urne"/></svg>Scrutin ouvert</span><span class="badge badge-or">En cours</span></div>
+            <div class="carte-corps">
+              <div style="font-weight:600;font-size:11px">Vote solennel — LFR 2026 (ensemble du texte)</div>
+              <button class="btn btn-primaire btn-bloc" style="margin-top:8px">Ouvrir le vote sécurisé</button>
+            </div>
+          </div>
+          <div class="carte">
+            <div class="carte-tete"><span class="carte-titre"><svg class="ic"><use href="#i-doc"/></svg>Documents de séance</span></div>
+            <div class="carte-corps" style="display:grid;gap:7px">
+              <div style="display:flex;gap:8px;align-items:center;font-size:10.5px"><svg class="ic ic-sm" style="color:var(--bleu)"><use href="#i-doc"/></svg>Rapport commission Finances — LFR 2026 <span class="badge badge-vert" style="margin-inline-start:auto">Public</span></div>
+              <div style="display:flex;gap:8px;align-items:center;font-size:10.5px"><svg class="ic ic-sm" style="color:var(--bleu)"><use href="#i-doc"/></svg>PV séance n°11 <span class="badge badge-or" style="margin-inline-start:auto"><svg class="ic"><use href="#i-cadenas"/></svg>Interne</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="tel-tabbar" style="grid-template-columns:repeat(4,1fr)">
+          <div class="tel-tab actif"><svg class="ic"><use href="#i-accueil"/></svg>Tableau</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-calendrier"/></svg>Agenda</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-doc"/></svg>Documents</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-utilisateur"/></svg>Profil</div>
+        </div>
+      </div>
+      <div class="cadre-titre">7 · Espace député mobile</div>
+      <div class="cadre-desc">Vue simplifiée du back-office : présence, commissions, scrutin ouvert mis en avant (bord or), documents avec badge d'accès.</div>
+    </div>
+
+  </div>
+
+  <!-- ══ ÉTATS SYSTÈME ══ -->
+  <h2 class="spec-section">États système &amp; miroir RTL</h2>
+  <p class="spec-note">Obligatoires pour un réseau instable : chaque écran a un état hors-ligne, chargement (squelettes, jamais de spinner bloquant),
+     erreur réseau avec action de reprise, et état vide honnête. Le dernier cadre montre la bascule arabe : miroir complet
+     (navigation, alignements, sens de lecture) avec les familles Amiri / Readex Pro.</p>
+
+  <div class="cadres">
+
+    <!-- 8a. Hors ligne -->
+    <div class="cadre-bloc">
+      <div class="tel">
+        <div class="tel-statut"><span>09:41</span><span class="tel-encoche"></span><span style="color:#F0B4AE">✕ Hors ligne</span></div>
+        <div class="tel-corps" style="justify-content:center">
+          <div class="etat-vide">
+            <div class="ev-icone" style="background:var(--rouge-pale);color:var(--rouge)"><svg class="ic" style="width:26px;height:26px"><use href="#i-horsligne"/></svg></div>
+            <h3>Vous êtes hors ligne</h3>
+            <p>Les dernières données consultées restent disponibles. Reconnectez-vous pour actualiser.</p>
+            <button class="btn btn-contour" style="margin-top:12px">Réessayer</button>
+          </div>
+          <div class="bandeau bandeau-info"><svg class="ic"><use href="#i-info"/></svg><div>Agenda consulté il y a 2 h — affiché depuis le cache.</div></div>
+        </div>
+      </div>
+      <div class="cadre-titre">8a · Hors ligne</div>
+      <div class="cadre-desc">Le contenu en cache reste lisible (mention d'horodatage) ; le rouge n'apparaît que pour signaler la coupure.</div>
+    </div>
+
+    <!-- 8b. Chargement -->
+    <div class="cadre-bloc">
+      <div class="tel">
+        <div class="tel-statut"><span>09:41</span><span class="tel-encoche"></span><span>2G ▂</span></div>
+        <div class="tel-entete">
+          <span class="tb-seal"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="#fff" stroke="#002B7F" stroke-width="3"/><path d="M44 16 L56 16 L60 23 L62 36 L61 50 L63 62 L59 77 L56 84 L44 84 L41 77 L37 62 L39 50 L38 36 L40 23 Z" fill="#002B7F"/></svg></span>
+          <div><div class="tel-entete-titre">Textes de loi</div><div class="tel-entete-sous">Chargement…</div></div>
+        </div>
+        <div class="tel-corps">
+          <div class="skeleton" style="height:36px"></div>
+          <div class="skeleton skeleton-carte" style="height:90px"></div>
+          <div class="skeleton skeleton-carte" style="height:90px"></div>
+          <div class="skeleton skeleton-carte" style="height:90px"></div>
+        </div>
+      </div>
+      <div class="cadre-titre">8b · Chargement</div>
+      <div class="cadre-desc">Squelettes à la forme du contenu attendu — perçus comme plus rapides qu'un spinner sur connexion 2G/3G.</div>
+    </div>
+
+    <!-- 8c. Erreur réseau -->
+    <div class="cadre-bloc">
+      <div class="tel">
+        <div class="tel-statut"><span>09:41</span><span class="tel-encoche"></span><span>3G ▂▄</span></div>
+        <div class="tel-corps" style="justify-content:center">
+          <div class="etat-vide">
+            <div class="ev-icone" style="background:var(--or-pale);color:var(--or-texte)"><svg class="ic" style="width:26px;height:26px"><use href="#i-alerte"/></svg></div>
+            <h3>Connexion impossible</h3>
+            <p>Le serveur est momentanément injoignable. Vérifiez votre connexion puis réessayez.</p>
+            <button class="btn btn-primaire" style="margin-top:12px">Réessayer</button>
+          </div>
+        </div>
+      </div>
+      <div class="cadre-titre">8c · Erreur réseau</div>
+      <div class="cadre-desc">Message en langage simple, une seule action. Jamais de code d'erreur brut face au citoyen.</div>
+    </div>
+
+    <!-- 8d. État vide -->
+    <div class="cadre-bloc">
+      <div class="tel">
+        <div class="tel-statut"><span>09:41</span><span class="tel-encoche"></span><span>4G ▂▄▆</span></div>
+        <div class="tel-entete">
+          <span class="tb-seal"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="#fff" stroke="#002B7F" stroke-width="3"/><path d="M44 16 L56 16 L60 23 L62 36 L61 50 L63 62 L59 77 L56 84 L44 84 L41 77 L37 62 L39 50 L38 36 L40 23 Z" fill="#002B7F"/></svg></span>
+          <div><div class="tel-entete-titre">Historique des votes</div><div class="tel-entete-sous">Scrutins publics</div></div>
+        </div>
+        <div class="tel-corps">
+          <div class="bandeau bandeau-dev"><svg class="ic"><use href="#i-outil"/></svg><div><strong>Module en cours de développement</strong>Les résultats seront publiés dès la mise en service du vote électronique.</div></div>
+          <div class="etat-vide">
+            <div class="ev-icone"><svg class="ic" style="width:26px;height:26px"><use href="#i-urne"/></svg></div>
+            <h3>Aucune donnée disponible pour le moment</h3>
+            <p>Les informations seront publiées ici dès qu'elles seront disponibles.</p>
+          </div>
+        </div>
+      </div>
+      <div class="cadre-titre">8d · État vide honnête</div>
+      <div class="cadre-desc">Le principe « données réelles ou vide honnête » : bandeau d'explication + état vide, jamais de faux chiffres.</div>
+    </div>
+
+    <!-- 9. RTL -->
+    <div class="cadre-bloc" dir="rtl" lang="ar" style="--f-display:'Noto Naskh Arabic',serif;--f-ui:'Noto Sans Arabic',sans-serif">
+      <div class="tel">
+        <div class="tel-statut"><span>٠٩:٤١</span><span class="tel-encoche"></span><span>4G ▂▄▆</span></div>
+        <div class="tel-entete">
+          <span class="tb-seal"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="#fff" stroke="#002B7F" stroke-width="3"/><path d="M44 16 L56 16 L60 23 L62 36 L61 50 L63 62 L59 77 L56 84 L44 84 L41 77 L37 62 L39 50 L38 36 L40 23 Z" fill="#002B7F"/></svg></span>
+          <div><div class="tel-entete-titre">الجمعية الوطنية</div><div class="tel-entete-sous">جمهورية تشاد</div></div>
+        </div>
+        <div class="tel-corps">
+          <h2 class="tel-titre-page">مرحبًا 👋</h2>
+          <div class="carte" style="border-inline-start:4px solid var(--vert)">
+            <div class="carte-corps">
+              <span class="badge badge-vert">جارية</span>
+              <div style="font-weight:700;font-size:12.5px;margin-top:5px">الجلسة العامة رقم ١٢ — التصويت الرسمي على قانون المالية</div>
+              <div style="font-size:10px;color:var(--texte-2);margin-top:2px"><svg class="ic ic-sm"><use href="#i-lieu"/></svg> قاعة الجلسات · منذ ٠٩:٠٠</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="carte carte-corps" style="text-align:center">
+              <svg class="ic ic-lg" style="color:var(--bleu)"><use href="#i-balance"/></svg>
+              <div style="font-weight:600;font-size:11px;margin-top:4px">متابعة القوانين</div>
+            </div>
+            <div class="carte carte-corps" style="text-align:center">
+              <svg class="ic ic-lg" style="color:var(--or-texte)"><use href="#i-envoyer"/></svg>
+              <div style="font-weight:600;font-size:11px;margin-top:4px">مراسلة نائبي</div>
+            </div>
+          </div>
+          <div class="bandeau bandeau-info"><svg class="ic"><use href="#i-info"/></svg><div>واجهة معكوسة بالكامل: القوائم والمحاذاة واتجاه الأيقونات.</div></div>
+        </div>
+        <div class="tel-tabbar">
+          <div class="tel-tab actif"><svg class="ic"><use href="#i-accueil"/></svg>الرئيسية</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-calendrier"/></svg>الجدول</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-balance"/></svg>القوانين</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-deputes"/></svg>النواب</div>
+          <div class="tel-tab"><svg class="ic"><use href="#i-citoyen"/></svg>المواطن</div>
+        </div>
+      </div>
+      <div class="cadre-titre" style="font-family:'Inter'" dir="ltr">9 · Miroir RTL (arabe)</div>
+      <div class="cadre-desc" dir="ltr" style="font-family:'Inter'">Même accueil citoyen en arabe : ordre des onglets inversé, bord de carte côté droit, typographies Amiri/Readex Pro natives.</div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+/* ============================================================
+   AN CONNECT TCHAD — SVG Hemicycle Logo
+   Inline SVG used in the header and branding
+   ============================================================ */
+
+/* This file provides the hemicycle logo as a CSS background
+   for use across the site. The actual SVG is embedded in HTML. */
+
+.logo-hemicycle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Favicon-size logo */
+.logo-hemicycle--sm { width: 32px; height: 32px; }
+.logo-hemicycle--md { width: 44px; height: 44px; }
+.logo-hemicycle--lg { width: 64px; height: 64px; }
+.logo-hemicycle--xl { width: 96px; height: 96px; }

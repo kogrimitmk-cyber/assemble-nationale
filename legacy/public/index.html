@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AN Connect Tchad — portail numérique officiel de l'Assemblée Nationale de la République du Tchad : agenda, textes de loi, députés, votes, espace citoyen.">
+  <title>Accueil — AN Connect Tchad</title>
+
+  <!-- Design system (charte AN Connect) -->
+  <link rel="stylesheet" href="/assets/css/design-system.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
+  <link rel="stylesheet" href="/assets/css/pages.css">
+  <link rel="stylesheet" href="/assets/css/logo.css">
+  <link rel="stylesheet" href="/assets/css/an-extra.css">
+
+  <!-- Icônes Phosphor (variante « regular » uniquement : plus légère
+       et plus rapide sur connexion lente que le bundle complet) -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+</head>
+<body>
+
+  <a href="#vue" class="skip-link" data-t="a11y.contenu">Aller au contenu</a>
+
+  <!-- ==========================================
+       HEADER (masqué sur l'espace député)
+       ========================================== -->
+  <header class="site-header" id="site-header">
+    <div class="site-header__inner">
+      <button class="mobile-menu-toggle" id="btn-burger" aria-label="Ouvrir le menu">
+        <i class="ph ph-list"></i>
+      </button>
+
+      <a href="#/" class="site-header__brand" data-lien>
+        <div class="site-header__logo" id="logo-mark"></div>
+        <div class="site-header__title">AN Connect <small>Tchad</small></div>
+      </a>
+
+      <nav class="main-nav hide-mobile" id="main-nav" aria-label="Navigation principale"></nav>
+
+      <div class="header-actions">
+        <div class="lang-toggle hide-mobile" id="lang-toggle">
+          <button class="lang-toggle__btn" data-lang="FR">FR</button>
+          <button class="lang-toggle__btn" data-lang="AR">ع</button>
+        </div>
+        <span id="header-profile-slot"></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Overlay -->
+  <div class="mobile-nav" id="mobile-nav">
+    <div class="mobile-nav__panel">
+      <div class="mobile-nav__header">
+        <div class="lang-toggle" id="lang-toggle-mobile">
+          <button class="lang-toggle__btn" data-lang="FR">FR</button>
+          <button class="lang-toggle__btn" data-lang="AR">ع</button>
+        </div>
+        <button class="mobile-nav__close" id="btn-close-nav" aria-label="Fermer le menu"><i class="ph ph-x"></i></button>
+      </div>
+      <nav class="mobile-nav__links" id="mobile-nav-links"></nav>
+      <div class="mobile-nav__footer" id="mobile-nav-footer"></div>
+    </div>
+  </div>
+
+  <!-- ========= VUE SPA ========= -->
+  <div id="vue"></div>
+
+  <!-- ========= FOOTER (masqué sur l'espace député) ========= -->
+  <footer class="site-footer" id="site-footer"></footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="/assets/i18n.js"></script>
+  <script src="/assets/app.js"></script>
+</body>
+</html>

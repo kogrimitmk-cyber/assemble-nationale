@@ -1,0 +1,25 @@
+{
+  "name": "an-connect-tchad",
+  "version": "2.0.0",
+  "description": "AN Connect Tchad — Plateforme numérique officielle de l'Assemblée Nationale de la République du Tchad",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "init-db": "node db/init.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "better-sqlite3": "^12.2.0",
+    "bcryptjs": "^2.4.3",
+    "express-session": "^1.18.0",
+    "better-sqlite3-session-store": "^0.1.0",
+    "dotenv": "^16.4.5",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.4.0",
+    "cookie-parser": "^1.4.6"
+  }
+}

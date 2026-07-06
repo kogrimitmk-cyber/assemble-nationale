@@ -1,0 +1,102 @@
+/* ══════════════════════════════════════════════════════════════
+   Back-office AN Connect — styles (charte : bleu #002B7F / or #D4A843)
+   ══════════════════════════════════════════════════════════════ */
+
+.admin-shell { display: flex; min-height: 100vh; background: var(--color-bg); }
+
+/* ── Sidebar ─────────────────────────────────────────────────── */
+.admin-side {
+  width: 264px; flex-shrink: 0; display: flex; flex-direction: column;
+  background: linear-gradient(180deg, var(--blue-900) 0%, var(--blue-800) 100%);
+  color: #fff; position: sticky; top: 0; height: 100vh;
+}
+.admin-side__brand {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-6) var(--space-5); border-bottom: 1px solid rgba(255,255,255,.1);
+  font-family: var(--font-serif); font-size: var(--text-lg); font-weight: 700; line-height: 1.1;
+}
+.admin-side__brand small { color: var(--gold-400); font-family: var(--font-sans); font-size: var(--text-xs); font-weight: 500; letter-spacing: .04em; text-transform: uppercase; }
+.admin-side__nav { flex: 1; padding: var(--space-4) var(--space-3); display: flex; flex-direction: column; gap: 2px; overflow-y: auto; }
+.admin-side__link {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-3) var(--space-4); border-radius: var(--radius-md);
+  color: rgba(255,255,255,.82); font-size: var(--text-sm); font-weight: 500; text-decoration: none;
+  transition: background .15s, color .15s;
+}
+.admin-side__link:hover { background: rgba(255,255,255,.08); color: #fff; }
+.admin-side__link.actif { background: var(--gold-500); color: var(--blue-900); font-weight: 600; }
+.admin-side__link i { font-size: 1.1rem; }
+.admin-side__foot { padding: var(--space-4) var(--space-3); border-top: 1px solid rgba(255,255,255,.1); }
+
+/* ── Zone principale ─────────────────────────────────────────── */
+.admin-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.admin-top {
+  display: flex; align-items: center; justify-content: flex-end; gap: var(--space-4);
+  padding: var(--space-3) var(--space-6); background: var(--white);
+  border-bottom: 1px solid var(--color-border); position: sticky; top: 0; z-index: 5;
+}
+.admin-top__user { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); font-weight: 600; color: var(--color-text-secondary); }
+.admin-content { padding: var(--space-8); flex: 1; }
+
+/* ── En-tete de page ─────────────────────────────────────────── */
+.admin-page__head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-4); margin-bottom: var(--space-6); flex-wrap: wrap; }
+.admin-page__titre { display: flex; align-items: center; gap: var(--space-3); font-family: var(--font-serif); font-size: var(--text-3xl); color: var(--color-primary); margin: 0; }
+.admin-page__compte { color: var(--color-text-muted); font-size: var(--text-sm); margin: var(--space-1) 0 0; }
+.admin-page__outils { display: flex; align-items: center; gap: var(--space-3); }
+.admin-search { display: flex; align-items: center; gap: var(--space-2); background: var(--white); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0 var(--space-3); color: var(--color-text-muted); }
+.admin-search .form-input { border: none; padding: var(--space-2) 0; background: transparent; }
+
+/* ── Tableau ─────────────────────────────────────────────────── */
+.admin-table-wrap { background: var(--white); border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); }
+.admin-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+.admin-table th { text-align: left; padding: var(--space-3) var(--space-4); background: var(--blue-50); color: var(--color-primary); font-weight: 600; font-size: var(--text-xs); text-transform: uppercase; letter-spacing: .03em; }
+.admin-table td { padding: var(--space-3) var(--space-4); border-top: 1px solid var(--color-border); color: var(--color-text-secondary); }
+.admin-table tbody tr:hover { background: var(--blue-50); }
+.admin-table__act { text-align: right; white-space: nowrap; }
+.admin-danger, .admin-danger:hover { color: var(--color-danger); }
+.admin-table--compact { font-size: var(--text-sm); margin-top: var(--space-3); }
+.admin-table--compact th { background: transparent; border-bottom: 1px solid var(--color-border); }
+
+/* ── Overlay + tiroir formulaire ─────────────────────────────── */
+.admin-overlay { position: fixed; inset: 0; background: rgba(0,26,77,.45); display: flex; justify-content: flex-end; z-index: 50; backdrop-filter: blur(2px); }
+.admin-drawer { width: 640px; max-width: 100%; height: 100%; overflow-y: auto; background: var(--white); box-shadow: var(--shadow-xl); animation: admin-slide .2s ease; }
+@keyframes admin-slide { from { transform: translateX(24px); opacity: .6; } to { transform: none; opacity: 1; } }
+.admin-drawer__head { display: flex; align-items: center; justify-content: space-between; padding: var(--space-5) var(--space-6); border-bottom: 1px solid var(--color-border); position: sticky; top: 0; background: var(--white); z-index: 2; }
+.admin-drawer__head h2 { font-family: var(--font-serif); font-size: var(--text-xl); color: var(--color-primary); margin: 0; }
+
+/* ── Formulaire ──────────────────────────────────────────────── */
+.admin-form { padding: var(--space-6); }
+.admin-form__grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4) var(--space-5); }
+.admin-form__full { grid-column: 1 / -1; }
+.admin-form__actions { display: flex; justify-content: flex-end; gap: var(--space-3); margin-top: var(--space-6); padding-top: var(--space-5); border-top: 1px solid var(--color-border); }
+.admin-req { color: var(--color-danger); }
+.admin-aide { font-size: var(--text-xs); color: var(--color-text-muted); margin-top: var(--space-1); }
+.admin-form textarea.form-input { resize: vertical; }
+
+.admin-file { display: flex; flex-direction: column; gap: var(--space-2); }
+.admin-file__preview { max-width: 120px; max-height: 120px; border-radius: var(--radius-md); border: 1px solid var(--color-border); object-fit: cover; }
+.admin-file__link { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); }
+
+/* ── Sous-collections ────────────────────────────────────────── */
+.admin-sous { padding: var(--space-6); border-top: 8px solid var(--color-bg); }
+.admin-sous__titre { display: flex; align-items: center; gap: var(--space-2); font-family: var(--font-serif); font-size: var(--text-lg); color: var(--color-primary); margin: 0 0 var(--space-2); }
+.admin-sous__vide { color: var(--color-text-muted); font-size: var(--text-sm); }
+.admin-sous__form { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-3); margin-top: var(--space-4); padding: var(--space-4); background: var(--color-bg); border-radius: var(--radius-md); }
+.admin-sous__form .form-group { flex: 1; min-width: 140px; margin: 0; }
+
+/* ── Connexion / accès refusé ────────────────────────────────── */
+.admin-login { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: var(--space-6); background: linear-gradient(160deg, var(--blue-900), var(--blue-800)); }
+.admin-login__card { width: 100%; max-width: 420px; background: var(--white); border-radius: var(--radius-lg); box-shadow: var(--shadow-xl); padding: var(--space-10) var(--space-8); text-align: center; }
+.admin-login__card h1 { font-family: var(--font-serif); font-size: var(--text-2xl); color: var(--color-primary); margin: var(--space-4) 0 var(--space-1); }
+.admin-login__sub { color: var(--color-text-muted); font-size: var(--text-sm); margin-bottom: var(--space-6); }
+.admin-login__card .form-group { text-align: left; margin-bottom: var(--space-4); }
+.admin-login__retour { display: inline-flex; align-items: center; gap: var(--space-2); margin-top: var(--space-5); font-size: var(--text-sm); }
+.admin-login__deny { width: 64px; height: 64px; margin: 0 auto; border-radius: var(--radius-full); background: var(--red-100); color: var(--red-600); display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .admin-side { position: fixed; z-index: 40; transform: translateX(-100%); }
+  .admin-form__grid { grid-template-columns: 1fr; }
+  .admin-drawer { width: 100%; }
+  .admin-content { padding: var(--space-4); }
+}
