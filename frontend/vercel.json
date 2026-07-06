@@ -4,8 +4,8 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://anconnect-api.onrender.com" },
-    { "source": "/media/:path*", "destination": "https://REMPLACER-PAR-URL-RENDER.onrender.com/media/:path*" },
+    { "source": "/api/:path*", "destination": "https://anconnect-api.onrender.com/api/:path*" },
+    { "source": "/media/:path*", "destination": "https://anconnect-media.onrender.com/media/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
